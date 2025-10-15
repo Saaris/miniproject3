@@ -1,5 +1,7 @@
 import express from 'express';
 import usersRouter from './routes/users.js';
+import registerRouter from './routes/register.js';
+import signinRouter from './routes/signin.js';
 const logger = (req, res, next) => {
     console.log(`${req.method}  ${req.url}`);
     next();
@@ -13,8 +15,8 @@ app.use(express.json());
 app.use('/', logger);
 //router moduler
 app.use('/api/users', usersRouter);
-app.use('/api/register');
-app.use('/api/signin');
+app.use('/api/register', registerRouter);
+app.use('/api/signin', signinRouter);
 app.listen(port, () => {
     console.log(`Server is listening on port ${port}...`);
 });

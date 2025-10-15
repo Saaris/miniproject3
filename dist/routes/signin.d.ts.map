@@ -1,1 +1,1 @@
-{"version":3,"file":"signin.d.ts","sourceRoot":"","sources":["../../ServerSrc/routes/signin.ts"],"names":[],"mappings":""}
+{"version":3,"file":"signin.d.ts","sourceRoot":"","sources":["../../ServerSrc/routes/signin.ts"],"names":[],"mappings":"AAGA,OAAO,KAAK,EAAE,MAAM,EAAoB,MAAM,SAAS,CAAA;AAEvD,QAAA,MAAM,MAAM,EAAE,MAAyB,CAAC;AAGxC,eAAe,MAAM,CAAA"}
