@@ -3,13 +3,8 @@
 // PUT /:id  ← ändrar användarnamn och lösenord för en befintlig användare
 // GET /  ← all info om specifik användare
 // GET /  ← svarar med lista av användarnamn
-
-
-import express from 'express'
-import type { Router, Response, Request} from 'express'
-import { DeleteCommand, QueryCommand } from '@aws-sdk/lib-dynamodb'
-
-const router: Router = express.Router();
-
-
-export default router
+import express from 'express';
+import { DeleteCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
+const router = express.Router();
+export default router;
+//# sourceMappingURL=users.js.map

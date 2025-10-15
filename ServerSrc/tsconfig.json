@@ -1,12 +1,10 @@
 {
-
   "compilerOptions": {
     // File Layout
     "rootDir": "./",  
-    "outDir": "../distServer/",
+    "outDir": "../dist",
 
     // Environment Settings
-  
     "module": "nodenext",
     "target": "esnext",
     "types": [],
@@ -40,5 +38,13 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true
-  }
+  },
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
 }
