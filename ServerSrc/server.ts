@@ -8,7 +8,7 @@ const logger: RequestHandler = (req, res, next) => {
 }
 //konfiguration
 const app: Express = express()
-const port: Number(process.env.PORT) || 1339
+const port: number = Number(process.env.PORT) || 1339
 
 //middlewares
 app.use(express.static('/dist'))
@@ -16,4 +16,6 @@ app.use(express.json())
 app.use('/', logger)
 
 //router moduler
-app.use('/api/users', userRouter)
+app.use('/api/users')
+app.use('/api/register')
+app.use('/api/signin')
