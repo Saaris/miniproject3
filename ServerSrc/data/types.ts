@@ -17,11 +17,7 @@ export interface SigninBody {
 	username: string;
 	password: string;
 }
-export interface User {
-	userId: string;
-	username: string;
-	password: string;  
-}
+
 export interface Payload {
 	username: string;
 	expiration: number;  

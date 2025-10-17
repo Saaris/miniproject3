@@ -38,8 +38,6 @@ router.post('/', async (req: Request<{}, SigninResp | void, UserBody>, res: Resp
 		return
 	}
 
-	// vi har hittat en användare
-	// sk = 'USER#id'
 	const userId = found.sk.substring(5) 
 	const accessLevel = found.accessLevel || 'user' // använd accessLevel från användaren
 	const token: string = createToken(userId, accessLevel)
