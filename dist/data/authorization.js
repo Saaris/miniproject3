@@ -1,11 +1,16 @@
 import jwt from 'jsonwebtoken';
 const jwtSecret = process.env.MY_JWT_SECRET || '';
 function validate(authHeader) {
-    // 'Bearer: token'
+    // 'Bearer token'
     if (!authHeader) {
         return null;
     }
-    const token = authHeader.substring(8);
+    // Kontrollera att det börjar med "Bearer "
+    if (!authHeader.startsWith('Bearer ')) {
+        console.log('Invalid authorization header format');
+        return null;
+    }
+    const token = authHeader.substring(7); // "Bearer " är 7 tecken
     try {
         const decodedPayload = jwt.verify(token, jwtSecret);
         const payload = { userId: decodedPayload.userId, accessLevel: decodedPayload.accessLevel };

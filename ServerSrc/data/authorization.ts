@@ -9,11 +9,18 @@ interface Payload  {
 }
 
 function validate(authHeader: string | undefined): Payload | null {
-	// 'Bearer: token'
+	// 'Bearer token'
 	if( !authHeader ) {
 		return null
 	}
-	const token: string = authHeader.substring(8) 
+	
+	// Kontrollera att det börjar med "Bearer "
+	if (!authHeader.startsWith('Bearer ')) {
+		console.log('Invalid authorization header format')
+		return null
+	}
+	
+	const token: string = authHeader.substring(7) // "Bearer " är 7 tecken
 	try {
 		const decodedPayload: Payload = jwt.verify(token, jwtSecret) as Payload
 		

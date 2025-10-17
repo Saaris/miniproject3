@@ -1,45 +1,32 @@
-// /api/users  (alla endpoints kräver inloggning, svara annars med 401)
-// DELETE /:id  ← tar bort användare
-// PUT /:id  ← ändrar användarnamn och lösenord för en befintlig användare
-// GET /  ← all info om specifik användare
-// GET /  ← svarar med lista av användarnamn
-
-
 import express from 'express'
 import type { Router, Response, Request} from 'express'
-import { DeleteCommand, QueryCommand, GetCommand } from '@aws-sdk/lib-dynamodb'
+import { DeleteCommand, ScanCommand, GetCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb'
 import { db } from '../data/dynamodb.js'
-import { requireAuth, tableName } from '../data/middleware.js'
-import type { 
-    User, 
-    UserIdParam, 
-    UserRes, 
-    ErrorMessage, 
-    GetUsersRes 
-} from '../data/userTypes.js'
+import { tableName } from '../data/middleware.js'
+import type { User, UserIdParam, UserRes, ErrorMessage, GetUsersRes, UpdateUserRequest } from '../data/userTypes.js'
 
 const router: Router = express.Router();
-
-// Använd auth middleware på alla routes
-router.use(requireAuth)
 
 
 router.get('/', async (req: Request, res: Response<GetUsersRes | ErrorMessage>) =>  { 
   try {
-    const result = await db.send(new QueryCommand({
+    const result = await db.send(new ScanCommand({
       TableName: tableName,
-      IndexName: undefined, // Använd main table
-      FilterExpression: 'sk = :sk',
+      FilterExpression: 'pk = :pk',
       ExpressionAttributeValues: {
-        ':sk': 'PROFILE'
+        ':pk': 'USER'
       }
     }));
 
-    const users: User[] = result.Items?.map(item => ({
+    const users: User[] = result.Items?.map((item: any) => ({
       pk: item.pk,
       sk: item.sk,
       username: item.username,
-      meta: item.meta
+      meta: item.meta || {
+        passwordHash: item.password || '', // fallback för gamla format
+        accessLevel: item.accessLevel || 'user',
+        createdAt: new Date().toISOString()
+      }
     })) || [];
 
     res.status(200).json({ users }); 
@@ -63,14 +50,14 @@ router.get('/:id', async (req: Request<UserIdParam>, res: Response<UserRes | Err
         });
       }
 
-      // Formatera user ID
-      const userId = id.startsWith('USER#') ? id : `USER#${id}`;
+      // Formatera user ID - sk innehåller 'USER#id'
+      const sortKey = id.startsWith('USER#') ? id : `USER#${id}`;
 
       const result = await db.send(new GetCommand({
         TableName: tableName,
         Key: { 
-          pk: userId, 
-          sk: 'PROFILE'
+          pk: 'USER',      // Alla användare har pk = 'USER'
+          sk: sortKey      // sk = 'USER#uuid'
         }
       }));
 
@@ -83,11 +70,11 @@ router.get('/:id', async (req: Request<UserIdParam>, res: Response<UserRes | Err
 
       // Returnera användarinfo (utan lösenord)
       const userInfo = {
-        id: result.Item.pk,
+        id: result.Item.sk,  // sk innehåller 'USER#uuid'
         username: result.Item.username,
-        email: result.Item.meta?.email,
-        accessLevel: result.Item.meta?.accessLevel,
-        createdAt: result.Item.meta?.createdAt
+        email: result.Item.meta?.email || result.Item.email,
+        accessLevel: result.Item.meta?.accessLevel || result.Item.accessLevel,
+        createdAt: result.Item.meta?.createdAt || new Date().toISOString()
       };
 
       res.status(200).json({ 

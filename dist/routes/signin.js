@@ -1,5 +1,3 @@
-// /api/signin
-// POST /, { username, password }  ← loggar in en existerande användare
 import express from 'express';
 import { QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { db } from '../data/dynamodb.js';
@@ -30,8 +28,6 @@ router.post('/', async (req, res) => {
         res.sendStatus(401);
         return;
     }
-    // vi har hittat en användare
-    // sk = 'USER#id'
     const userId = found.sk.substring(5);
     const accessLevel = found.accessLevel || 'user'; // använd accessLevel från användaren
     const token = createToken(userId, accessLevel);
