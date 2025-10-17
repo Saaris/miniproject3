@@ -8,9 +8,10 @@ export interface UserItem {
 export interface MessageResp {
 	message: string;
 }
-export interface LoginResp {
+export interface SigninResp {
 	success: boolean;
 	token?: string;
+	message: string;
 }
 export interface SigninBody {
 	username: string;
@@ -24,4 +25,15 @@ export interface User {
 export interface Payload {
 	username: string;
 	expiration: number;  
+}
+export interface UserBody {
+	username: string;
+	password: string;
+ 
+}
+
+export interface PostResponse {
+	success: boolean;
+	message: string;
+	token?: string;
 }

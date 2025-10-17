@@ -1,6 +1,6 @@
 // /api/register
 // POST /, { username, password }  ← skapar en ny användare och loggar in denna
-import { PutCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
+import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import express from 'express';
 import { db } from '../data/dynamodb.js';
 import { createToken } from '../data/authorization.js';

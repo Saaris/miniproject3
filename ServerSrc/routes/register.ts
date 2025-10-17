@@ -1,30 +1,20 @@
 // /api/register
 // POST /, { username, password }  ← skapar en ny användare och loggar in denna
 
-import { PutCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
+import { PutCommand} from '@aws-sdk/lib-dynamodb';
 import express from 'express'
 import type { Router, Response, Request} from 'express'
 import { db } from '../data/dynamodb.js'
 import { createToken } from '../data/authorization.js'
+import type { UserBody, SigninResp } from '../data/types.js';
 
 const tableName = 'jwt';
 
 const router: Router = express.Router();
 
-interface PostRegister {
-    username: string;
-    password: string;
- 
-}
 
-interface PostResponse {
-    success: boolean;
-    message: string;
-    token?: string;
-}
-
-router.post('/', async (req: Request<{},PostResponse, PostRegister>, res: Response<PostResponse>) => {
-    const body: PostRegister = req.body
+router.post('/', async (req: Request<{},SigninResp, UserBody>, res: Response<SigninResp>) => {
+    const body: UserBody = req.body
 
     const newId = crypto.randomUUID()
 
