@@ -10,7 +10,7 @@ const logger: RequestHandler = (req, res, next) => {
 	console.log(`${req.method}  ${req.url}`)
 	next()
 }
-//konfiguration
+//konfig
 const app: Express = express()
 const port: number = Number(process.env.PORT) || 1338
 
