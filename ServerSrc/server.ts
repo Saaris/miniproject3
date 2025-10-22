@@ -21,13 +21,26 @@ app.use('/', logger)
 
 //router moduler (dessa kräver INTE auth)
 app.use('/api/register', registerRouter)  
-app.use('/api/signin', signinRouter)      
+app.use('/api/signin', signinRouter) 
+
+// Public endpoints (kräver INTE auth)
+app.get('/api/ping', (req: Request, res: Response) => {
+	res.send({ message: 'Pong' })
+})
+
+app.get('/api/test-users', (req: Request, res: Response) => {
+	res.json([
+		{ userId: '1', username: 'testuser1' },
+		{ userId: '2', username: 'testuser2' }
+	])
+})
 
 // Auth middleware för skyddade routes
 app.use('/api', requireAuth)
 
 // Skyddade routes (kräver auth)
-app.use('/api/users', usersRouter)      
+app.use('/api/users', usersRouter)
+
 
 
 app.listen(port, () => {
